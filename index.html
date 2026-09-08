@@ -3,303 +3,403 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Roulette</title>
+<title>Virtual Roulette</title>
 
 <style>
-* {
-  box-sizing: border-box;
-}
+    * {
+        box-sizing: border-box;
+    }
 
-body {
-  margin: 0;
-  min-height: 100vh;
-  background: #080b12;
-  color: white;
-  font-family: Arial, sans-serif;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
-}
+    :root {
+        --bg: #070a10;
+        --panel: #111827;
+        --panel-2: #0d1420;
+        --border: #293548;
+        --text: #ffffff;
+        --muted: #8d9aad;
+        --green: #35e79b;
+        --gold: #f6c945;
+        --red: #d92332;
+        --black: #080b10;
+    }
 
-.game {
-  width: 100%;
-  max-width: 1100px;
-  text-align: center;
-}
+    body {
+        margin: 0;
+        min-height: 100vh;
+        background:
+            radial-gradient(circle at top, #141c2a 0%, #080b12 42%, #05070b 100%);
+        color: var(--text);
+        font-family: Arial, Helvetica, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 24px;
+    }
 
-h1 {
-  font-size: 42px;
-  margin: 0 0 8px;
-}
+    .game {
+        width: 100%;
+        max-width: 1120px;
+    }
 
-.subtitle {
-  color: #8f9bad;
-  margin-bottom: 25px;
-}
+    .header {
+        text-align: center;
+        margin-bottom: 22px;
+    }
 
-.balance {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  background: #111827;
-  border: 1px solid #263247;
-  border-radius: 12px;
-  padding: 12px 25px;
-  margin-bottom: 20px;
-}
+    .header h1 {
+        margin: 0;
+        font-size: clamp(34px, 5vw, 52px);
+        letter-spacing: -1px;
+    }
 
-.balance span {
-  color: #42e6a4;
-  font-size: 25px;
-  font-weight: bold;
-}
+    .header p {
+        margin: 8px 0 0;
+        color: var(--muted);
+        font-size: 15px;
+    }
 
-.starting-balance {
-  width: 100%;
-  max-width: 500px;
-  margin: 0 auto 25px;
-  background: #111827;
-  border: 1px solid #263247;
-  border-radius: 14px;
-  padding: 18px;
-}
+    .top-bar {
+        display: flex;
+        justify-content: center;
+        gap: 14px;
+        flex-wrap: wrap;
+        margin-bottom: 22px;
+    }
 
-.starting-balance label {
-  display: block;
-  text-align: left;
-  color: #aab5c7;
-  font-size: 13px;
-  margin-bottom: 10px;
-}
+    .balance-card,
+    .money-card {
+        background: rgba(17, 24, 39, 0.96);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 16px 20px;
+        box-shadow: 0 14px 40px rgba(0, 0, 0, 0.22);
+    }
 
-.balance-input-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
+    .balance-card {
+        min-width: 220px;
+        text-align: center;
+    }
 
-.balance-input-row span {
-  font-size: 22px;
-  color: #42e6a4;
-  font-weight: bold;
-}
+    .balance-label {
+        color: var(--muted);
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 5px;
+    }
 
-.balance-input-row input {
-  flex: 1;
-  min-width: 0;
-}
+    .balance-value {
+        color: var(--green);
+        font-size: 29px;
+        font-weight: 800;
+    }
 
-.balance-input-row button {
-  background: #42e6a4;
-  color: #06130d;
-  border: none;
-  border-radius: 8px;
-  padding: 13px 16px;
-  font-weight: bold;
-  cursor: pointer;
-}
+    .money-card {
+        width: min(100%, 420px);
+    }
 
-.starting-balance-buttons {
-  display: flex;
-  gap: 8px;
-  margin-top: 12px;
-}
+    .money-title {
+        color: var(--muted);
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 9px;
+    }
 
-.starting-balance-buttons button {
-  flex: 1;
-  background: #1e293b;
-  color: white;
-  border: 1px solid #334155;
-  border-radius: 7px;
-  padding: 9px 4px;
-  cursor: pointer;
-}
+    .money-row {
+        display: flex;
+        gap: 8px;
+    }
 
-.starting-balance-buttons button:hover {
-  background: #334155;
-}
+    .money-row .dollar {
+        display: flex;
+        align-items: center;
+        color: var(--green);
+        font-weight: 800;
+        font-size: 20px;
+    }
 
-.layout {
-  display: flex;
-  gap: 35px;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
-}
+    input {
+        width: 100%;
+        background: #080d15;
+        border: 1px solid #354154;
+        color: white;
+        border-radius: 9px;
+        padding: 12px 13px;
+        outline: none;
+        font-size: 16px;
+    }
 
-.wheel-area {
-  position: relative;
-  width: min(480px, 90vw);
-}
+    input:focus {
+        border-color: var(--green);
+        box-shadow: 0 0 0 3px rgba(53, 231, 155, 0.08);
+    }
 
-canvas {
-  width: 100%;
-  height: auto;
-  display: block;
-}
+    button {
+        font-family: inherit;
+    }
 
-.pointer {
-  position: absolute;
-  top: -8px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 0;
-  height: 0;
-  border-left: 18px solid transparent;
-  border-right: 18px solid transparent;
-  border-top: 35px solid #facc15;
-  z-index: 5;
-  filter: drop-shadow(0 2px 3px black);
-}
+    .add-btn {
+        border: none;
+        border-radius: 9px;
+        background: var(--green);
+        color: #06130d;
+        font-weight: 800;
+        padding: 0 17px;
+        cursor: pointer;
+        white-space: nowrap;
+    }
 
-.panel {
-  width: 320px;
-  background: #111827;
-  border: 1px solid #263247;
-  border-radius: 18px;
-  padding: 25px;
-  text-align: left;
-}
+    .add-btn:hover {
+        filter: brightness(1.08);
+    }
 
-.panel h2 {
-  margin-top: 0;
-  text-align: center;
-}
+    .quick-money {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 7px;
+        margin-top: 9px;
+    }
 
-label {
-  display: block;
-  color: #aab5c7;
-  font-size: 13px;
-  margin-bottom: 7px;
-}
+    .quick-money button {
+        border: 1px solid #334155;
+        background: #1a2433;
+        color: white;
+        border-radius: 8px;
+        padding: 8px 4px;
+        cursor: pointer;
+        font-weight: 700;
+    }
 
-input {
-  width: 100%;
-  background: #080b12;
-  border: 1px solid #334155;
-  color: white;
-  border-radius: 9px;
-  padding: 13px;
-  font-size: 16px;
-  outline: none;
-}
+    .quick-money button:hover {
+        background: #243247;
+    }
 
-input:focus {
-  border-color: #42e6a4;
-}
+    .layout {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 42px;
+        flex-wrap: wrap;
+    }
 
-.bet-buttons {
-  display: flex;
-  gap: 8px;
-  margin: 12px 0 20px;
-}
+    .wheel-area {
+        position: relative;
+        width: min(510px, 92vw);
+        aspect-ratio: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 
-.bet-buttons button {
-  flex: 1;
-  background: #1e293b;
-  color: white;
-  border: 1px solid #334155;
-  border-radius: 7px;
-  padding: 9px;
-  cursor: pointer;
-}
+    canvas {
+        width: 100%;
+        height: 100%;
+        display: block;
+        filter: drop-shadow(0 18px 25px rgba(0, 0, 0, 0.38));
+    }
 
-.bet-buttons button:hover {
-  background: #334155;
-}
+    .pointer {
+        position: absolute;
+        z-index: 10;
+        top: -1px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 0;
+        height: 0;
+        border-left: 20px solid transparent;
+        border-right: 20px solid transparent;
+        border-top: 40px solid var(--gold);
+        filter:
+            drop-shadow(0 2px 2px rgba(0, 0, 0, 0.8))
+            drop-shadow(0 0 6px rgba(246, 201, 69, 0.3));
+    }
 
-.color-buttons {
-  display: flex;
-  gap: 10px;
-  margin: 10px 0 20px;
-}
+    .panel {
+        width: min(350px, 92vw);
+        background: rgba(17, 24, 39, 0.97);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 24px;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.24);
+    }
 
-.color-btn {
-  flex: 1;
-  padding: 13px;
-  border-radius: 8px;
-  border: 2px solid transparent;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-}
+    .panel h2 {
+        margin: 0 0 22px;
+        text-align: center;
+        font-size: 23px;
+    }
 
-.red {
-  background: #dc2626;
-}
+    .section-label {
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.9px;
+        margin-bottom: 8px;
+    }
 
-.black {
-  background: #020617;
-  border-color: #475569;
-}
+    .bet-presets {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 7px;
+        margin: 10px 0 20px;
+    }
 
-.green {
-  background: #16a34a;
-}
+    .bet-presets button {
+        border: 1px solid #334155;
+        background: #1a2433;
+        color: white;
+        border-radius: 8px;
+        padding: 8px 3px;
+        cursor: pointer;
+        font-weight: 700;
+    }
 
-.color-btn.selected {
-  border-color: #facc15;
-  box-shadow: 0 0 12px #facc15;
-}
+    .bet-presets button:hover {
+        background: #243247;
+    }
 
-.spin {
-  width: 100%;
-  padding: 16px;
-  border: none;
-  border-radius: 10px;
-  background: #42e6a4;
-  color: #06130d;
-  font-size: 18px;
-  font-weight: bold;
-  cursor: pointer;
-}
+    .color-buttons {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 9px;
+        margin-bottom: 19px;
+    }
 
-.spin:hover {
-  background: #65f0b8;
-}
+    .color-btn {
+        border: 2px solid transparent;
+        border-radius: 10px;
+        padding: 14px 7px;
+        color: white;
+        font-weight: 900;
+        cursor: pointer;
+        transition: 0.15s ease;
+    }
 
-.spin:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
+    .color-btn:hover {
+        transform: translateY(-1px);
+    }
 
-.message {
-  text-align: center;
-  min-height: 25px;
-  margin-top: 18px;
-  font-weight: bold;
-}
+    .color-btn.red {
+        background: var(--red);
+    }
 
-.reset {
-  display: block;
-  margin: 18px auto 0;
-  background: transparent;
-  color: #64748b;
-  border: none;
-  cursor: pointer;
-}
+    .color-btn.black {
+        background: var(--black);
+        border-color: #485569;
+    }
 
-.reset:hover {
-  color: white;
-}
+    .color-btn.green {
+        background: #139447;
+    }
 
-.history {
-  margin-top: 30px;
-  color: #94a3b8;
-  font-size: 14px;
-}
+    .color-btn.selected {
+        border-color: var(--gold);
+        box-shadow: 0 0 16px rgba(246, 201, 69, 0.35);
+        transform: translateY(-1px);
+    }
 
-.history span {
-  display: inline-block;
-  border-radius: 50%;
-  width: 30px;
-  height: 30px;
-  line-height: 30px;
-  margin: 3px;
-  color: white;
-  text-align: center;
-}
+    .spin-btn {
+        width: 100%;
+        border: none;
+        border-radius: 11px;
+        background: var(--green);
+        color: #06130d;
+        padding: 16px;
+        font-size: 18px;
+        font-weight: 900;
+        cursor: pointer;
+        transition: 0.15s ease;
+    }
+
+    .spin-btn:hover:not(:disabled) {
+        filter: brightness(1.08);
+        transform: translateY(-1px);
+    }
+
+    .spin-btn:disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    .message {
+        min-height: 46px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        color: #dce5f1;
+        font-size: 14px;
+        font-weight: 700;
+        line-height: 1.4;
+        margin-top: 13px;
+    }
+
+    .reset-btn {
+        display: block;
+        margin: 7px auto 0;
+        background: transparent;
+        color: #68778b;
+        border: none;
+        cursor: pointer;
+        font-size: 13px;
+    }
+
+    .reset-btn:hover {
+        color: white;
+    }
+
+    .history {
+        margin: 27px auto 0;
+        text-align: center;
+        color: var(--muted);
+        font-size: 13px;
+    }
+
+    .history-title {
+        margin-bottom: 9px;
+    }
+
+    .history-list {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+    .result {
+        width: 34px;
+        height: 34px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 50%;
+        color: white;
+        font-weight: 800;
+        font-size: 13px;
+        border: 1px solid rgba(255,255,255,0.12);
+    }
+
+    @media (max-width: 760px) {
+        body {
+            padding: 14px;
+        }
+
+        .layout {
+            gap: 24px;
+        }
+
+        .panel {
+            width: min(100%, 510px);
+        }
+
+        .quick-money,
+        .bet-presets {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
 </style>
 </head>
 
@@ -307,404 +407,766 @@ input:focus {
 
 <div class="game">
 
-  <h1>🎰 Roulette</h1>
-  <div class="subtitle">Virtual money roulette</div>
-
-  <div class="balance">
-    Balance: <span id="balance">$1,000.00</span>
-  </div>
-
-  <div class="starting-balance">
-    <label>Starting Balance</label>
-
-    <div class="balance-input-row">
-      <span>$</span>
-      <input
-        id="startingBalanceInput"
-        type="number"
-        min="0"
-        step="0.01"
-        value="1000"
-      >
-      <button onclick="setStartingBalance()">Set Balance</button>
+    <div class="header">
+        <h1>🎰 Roulette</h1>
+        <p>Virtual money only</p>
     </div>
 
-    <div class="starting-balance-buttons">
-      <button onclick="setStartingAmount(100)">100</button>
-      <button onclick="setStartingAmount(1000)">1,000</button>
-      <button onclick="setStartingAmount(10000)">10,000</button>
-      <button onclick="setStartingAmount(100000)">100,000</button>
-    </div>
-  </div>
+    <div class="top-bar">
 
-  <div class="layout">
+        <div class="balance-card">
+            <div class="balance-label">Virtual Balance</div>
+            <div class="balance-value" id="balance">$0.00</div>
+        </div>
 
-    <div class="wheel-area">
-      <div class="pointer"></div>
-      <canvas id="wheel" width="500" height="500"></canvas>
-    </div>
+        <div class="money-card">
+            <div class="money-title">Add Virtual Money</div>
 
-    <div class="panel">
+            <div class="money-row">
+                <div class="dollar">$</div>
 
-      <h2>Place Your Bet</h2>
+                <input
+                    id="addMoneyInput"
+                    type="number"
+                    min="0.01"
+                    step="0.01"
+                    value="100"
+                    inputmode="decimal"
+                >
 
-      <label>Bet Amount</label>
-      <input
-        id="betAmount"
-        type="number"
-        min="1"
-        step="0.01"
-        value="10"
-      >
+                <button class="add-btn" onclick="addMoney()">
+                    Add
+                </button>
+            </div>
 
-      <div class="bet-buttons">
-        <button onclick="setBet(1)">$1</button>
-        <button onclick="setBet(10)">$10</button>
-        <button onclick="setBet(50)">$50</button>
-        <button onclick="setBet(100)">$100</button>
-      </div>
-
-      <label>Choose Color</label>
-
-      <div class="color-buttons">
-        <button class="color-btn red" onclick="selectColor('red')">
-          RED
-        </button>
-
-        <button class="color-btn black" onclick="selectColor('black')">
-          BLACK
-        </button>
-
-        <button class="color-btn green" onclick="selectColor('green')">
-          GREEN
-        </button>
-      </div>
-
-      <button class="spin" id="spinButton" onclick="spin()">
-        SPIN WHEEL
-      </button>
-
-      <div class="message" id="message">
-        Choose a color and spin!
-      </div>
-
-      <button class="reset" onclick="resetGame()">
-        Reset Balance
-      </button>
+            <div class="quick-money">
+                <button onclick="addQuickMoney(100)">+$100</button>
+                <button onclick="addQuickMoney(500)">+$500</button>
+                <button onclick="addQuickMoney(1000)">+$1,000</button>
+                <button onclick="addQuickMoney(10000)">+$10,000</button>
+            </div>
+        </div>
 
     </div>
 
-  </div>
+    <div class="layout">
 
-  <div class="history">
-    Recent Results:
-    <div id="history"></div>
-  </div>
+        <div class="wheel-area">
+            <div class="pointer"></div>
+            <canvas id="wheel" width="700" height="700"></canvas>
+        </div>
+
+        <div class="panel">
+
+            <h2>Place Your Bet</h2>
+
+            <label class="section-label" for="betAmount">
+                Bet Amount
+            </label>
+
+            <input
+                id="betAmount"
+                type="number"
+                min="0.01"
+                step="0.01"
+                value="10"
+                inputmode="decimal"
+            >
+
+            <div class="bet-presets">
+                <button onclick="setBet(1)">$1</button>
+                <button onclick="setBet(10)">$10</button>
+                <button onclick="setBet(50)">$50</button>
+                <button onclick="setBet(100)">$100</button>
+            </div>
+
+            <label class="section-label">
+                Choose Color
+            </label>
+
+            <div class="color-buttons">
+                <button
+                    class="color-btn red"
+                    onclick="selectColor('red')"
+                >
+                    RED
+                </button>
+
+                <button
+                    class="color-btn black"
+                    onclick="selectColor('black')"
+                >
+                    BLACK
+                </button>
+
+                <button
+                    class="color-btn green"
+                    onclick="selectColor('green')"
+                >
+                    GREEN
+                </button>
+            </div>
+
+            <button
+                class="spin-btn"
+                id="spinButton"
+                onclick="spin()"
+            >
+                SPIN WHEEL
+            </button>
+
+            <div class="message" id="message">
+                Add virtual money, choose a color, and spin!
+            </div>
+
+            <button class="reset-btn" onclick="resetGame()">
+                Reset Virtual Balance
+            </button>
+
+        </div>
+    </div>
+
+    <div class="history">
+        <div class="history-title">Recent Results</div>
+        <div class="history-list" id="history"></div>
+    </div>
 
 </div>
 
 <script>
+/* =========================================================
+   ROULETTE DATA
+   European roulette wheel: 0–36
+   ========================================================= */
+
+const numbers = [
+    0, 32, 15, 19, 4, 21, 2, 25, 17,
+    34, 6, 27, 13, 36, 11, 30, 8, 23,
+    10, 5, 24, 16, 33, 1, 20, 14, 31,
+    9, 22, 18, 29, 7, 28, 12, 35, 3, 26
+];
+
+const redNumbers = new Set([
+    1, 3, 5, 7, 9,
+    12, 14, 16, 18,
+    19, 21, 23, 25, 27,
+    30, 32, 34, 36
+]);
+
+const wheelColors = numbers.map(number => {
+    if (number === 0) return "#159447";
+    return redNumbers.has(number) ? "#d92332" : "#080b10";
+});
+
+
+/* =========================================================
+   ELEMENTS
+   ========================================================= */
+
 const canvas = document.getElementById("wheel");
 const ctx = canvas.getContext("2d");
 
 const balanceEl = document.getElementById("balance");
+const addMoneyInput = document.getElementById("addMoneyInput");
 const betInput = document.getElementById("betAmount");
-const messageEl = document.getElementById("message");
 const spinButton = document.getElementById("spinButton");
+const messageEl = document.getElementById("message");
 const historyEl = document.getElementById("history");
 
-let balance = 1000;
+
+/* =========================================================
+   GAME STATE
+   ========================================================= */
+
+let balance = 0;
 let selectedColor = null;
 let rotation = 0;
 let spinning = false;
 
-// European roulette wheel
-const numbers = [
-  0, 32, 15, 19, 4, 21, 2, 25, 17, 34,
-  6, 27, 13, 36, 11, 30, 8, 23, 10, 5,
-  24, 16, 33, 1, 20, 14, 31, 9, 22, 18,
-  29, 7, 28, 12, 35, 3, 26
-];
 
-const redNumbers = new Set([
-  1,3,5,7,9,12,14,16,18,
-  19,21,23,25,27,30,32,34,36
-]);
-
-const colors = numbers.map(n =>
-  n === 0 ? "#16a34a" :
-  redNumbers.has(n) ? "#dc2626" : "#020617"
-);
+/* =========================================================
+   WHEEL DRAWING
+   ========================================================= */
 
 function drawWheel() {
-  const cx = canvas.width / 2;
-  const cy = canvas.height / 2;
-  const radius = 235;
-  const slice = (Math.PI * 2) / numbers.length;
 
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const cx = canvas.width / 2;
+    const cy = canvas.height / 2;
 
-  ctx.save();
-  ctx.translate(cx, cy);
-  ctx.rotate(rotation);
+    const radius = 325;
+    const slice = (Math.PI * 2) / numbers.length;
 
-  for (let i = 0; i < numbers.length; i++) {
-    const start = i * slice - Math.PI / 2;
-    const end = start + slice;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+    /* Outer shadow/ring */
     ctx.beginPath();
-    ctx.moveTo(0, 0);
-    ctx.arc(0, 0, radius, start, end);
-    ctx.closePath();
-
-    ctx.fillStyle = colors[i];
+    ctx.arc(cx, cy, radius + 9, 0, Math.PI * 2);
+    ctx.fillStyle = "#0b0f17";
     ctx.fill();
 
-    ctx.strokeStyle = "#facc15";
-    ctx.lineWidth = 1;
-    ctx.stroke();
-
     ctx.save();
-    ctx.rotate(start + slice / 2);
-    ctx.translate(radius * 0.82, 0);
-    ctx.rotate(Math.PI / 2);
 
-    ctx.fillStyle = "white";
-    ctx.font = "bold 15px Arial";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText(numbers[i], 0, 0);
+    /* Rotate entire wheel */
+    ctx.translate(cx, cy);
+    ctx.rotate(rotation);
+
+    for (let i = 0; i < numbers.length; i++) {
+
+        /*
+            Every slice starts at -PI/2.
+            This makes the first boundary begin at the top.
+        */
+
+        const startAngle =
+            i * slice - Math.PI / 2;
+
+        const endAngle =
+            startAngle + slice;
+
+        /* Slice */
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.arc(
+            0,
+            0,
+            radius,
+            startAngle,
+            endAngle
+        );
+        ctx.closePath();
+
+        ctx.fillStyle = wheelColors[i];
+        ctx.fill();
+
+        ctx.strokeStyle = "#d6b33d";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        /* Number */
+        const numberAngle =
+            startAngle + slice / 2;
+
+        ctx.save();
+
+        ctx.rotate(numberAngle);
+        ctx.translate(radius * 0.84, 0);
+
+        /*
+            Rotate text so it follows
+            the wheel's radial direction.
+        */
+        ctx.rotate(Math.PI / 2);
+
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "bold 23px Arial";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+
+        ctx.fillText(
+            numbers[i],
+            0,
+            0
+        );
+
+        ctx.restore();
+    }
 
     ctx.restore();
-  }
 
-  ctx.restore();
+    /* Center circle */
 
-  // Center
-  ctx.beginPath();
-  ctx.arc(cx, cy, 55, 0, Math.PI * 2);
-  ctx.fillStyle = "#111827";
-  ctx.fill();
-  ctx.strokeStyle = "#facc15";
-  ctx.lineWidth = 4;
-  ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(cx, cy, 78, 0, Math.PI * 2);
+    ctx.fillStyle = "#101722";
+    ctx.fill();
 
-  ctx.fillStyle = "#facc15";
-  ctx.font = "bold 18px Arial";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.fillText("ROULETTE", cx, cy);
+    ctx.strokeStyle = "#f6c945";
+    ctx.lineWidth = 7;
+    ctx.stroke();
 
-  // Outer ring
-  ctx.beginPath();
-  ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-  ctx.strokeStyle = "#facc15";
-  ctx.lineWidth = 8;
-  ctx.stroke();
-}
+    ctx.fillStyle = "#f6c945";
+    ctx.font = "bold 22px Arial";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
 
-function updateBalance() {
-  balanceEl.textContent =
-    "$" + balance.toLocaleString("en-US", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    });
-}
-
-function setBet(amount) {
-  betInput.value = amount;
-}
-
-function setStartingAmount(amount) {
-  document.getElementById("startingBalanceInput").value = amount;
-}
-
-function setStartingBalance() {
-  if (spinning) return;
-
-  const input = document.getElementById("startingBalanceInput");
-  const newBalance = parseFloat(input.value);
-
-  if (isNaN(newBalance) || newBalance < 0) {
-    messageEl.textContent = "Enter a valid starting balance!";
-    return;
-  }
-
-  balance = newBalance;
-  updateBalance();
-
-  messageEl.textContent =
-    `Starting balance set to $${newBalance.toFixed(2)}!`;
-}
-
-function selectColor(color) {
-  selectedColor = color;
-
-  document.querySelectorAll(".color-btn").forEach(btn => {
-    btn.classList.remove("selected");
-  });
-
-  document.querySelector("." + color).classList.add("selected");
-}
-
-function getColor(number) {
-  if (number === 0) return "green";
-  return redNumbers.has(number) ? "red" : "black";
-}
-
-function spin() {
-  if (spinning) return;
-
-  const bet = parseFloat(betInput.value);
-
-  if (!selectedColor) {
-    messageEl.textContent = "Choose a color first!";
-    return;
-  }
-
-  if (!bet || bet <= 0) {
-    messageEl.textContent = "Enter a valid bet amount!";
-    return;
-  }
-
-  if (bet > balance) {
-    messageEl.textContent = "You don't have enough virtual money!";
-    return;
-  }
-
-  spinning = true;
-  spinButton.disabled = true;
-
-  balance -= bet;
-  updateBalance();
-
-  messageEl.textContent = "Spinning...";
-
-  // NEW RANDOM RESULT EVERY SPIN
-  const winningIndex =
-    Math.floor(Math.random() * numbers.length);
-
-  const winningNumber = numbers[winningIndex];
-
-  const slice = (Math.PI * 2) / numbers.length;
-
-  // The pointer is at the TOP of the wheel.
-  // This calculates the exact rotation needed
-  // to put the randomly selected number under it.
-  const targetAngle =
-    -(winningIndex * slice + slice / 2);
-
-  // Always spin forward.
-  // Add a random number of full rotations.
-  const extraSpins =
-    5 + Math.floor(Math.random() * 4);
-
-  const currentRotation = rotation;
-
-  // Normalize the target so it is ahead of the current wheel position.
-  const twoPi = Math.PI * 2;
-
-  let targetRotation =
-    targetAngle + extraSpins * twoPi;
-
-  while (targetRotation <= currentRotation) {
-    targetRotation += twoPi;
-  }
-
-  const startRotation = rotation;
-  const finalRotation = targetRotation;
-
-  const duration = 4500;
-  const startTime = performance.now();
-
-  function animate(time) {
-    const progress = Math.min(
-      (time - startTime) / duration,
-      1
+    ctx.fillText(
+        "ROULETTE",
+        cx,
+        cy
     );
 
-    // Smooth deceleration
-    const eased = 1 - Math.pow(1 - progress, 4);
+    /* Outer gold ring */
 
-    rotation =
-      startRotation +
-      (finalRotation - startRotation) * eased;
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius + 2, 0, Math.PI * 2);
+    ctx.strokeStyle = "#f6c945";
+    ctx.lineWidth = 9;
+    ctx.stroke();
 
-    drawWheel();
+    /* Inner ring */
 
-    if (progress < 1) {
-      requestAnimationFrame(animate);
-    } else {
-      rotation = finalRotation;
-      finishSpin(winningNumber, bet);
-    }
-  }
-
-  requestAnimationFrame(animate);
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius * 0.48, 0, Math.PI * 2);
+    ctx.strokeStyle = "rgba(246,201,69,0.22)";
+    ctx.lineWidth = 2;
+    ctx.stroke();
 }
+
+
+/* =========================================================
+   BALANCE
+   ========================================================= */
+
+function updateBalance() {
+
+    balanceEl.textContent =
+        "$" +
+        balance.toLocaleString("en-US", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+}
+
+
+function addMoney() {
+
+    if (spinning) return;
+
+    const amount =
+        parseFloat(addMoneyInput.value);
+
+    if (!Number.isFinite(amount) || amount <= 0) {
+        messageEl.textContent =
+            "Enter a valid amount to add.";
+        return;
+    }
+
+    balance += amount;
+
+    updateBalance();
+
+    messageEl.textContent =
+        `$${amount.toLocaleString("en-US", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        })} in virtual money added.`;
+}
+
+
+function addQuickMoney(amount) {
+
+    if (spinning) return;
+
+    balance += amount;
+
+    updateBalance();
+
+    messageEl.textContent =
+        `$${amount.toLocaleString("en-US")} in virtual money added.`;
+}
+
+
+/* =========================================================
+   BET CONTROLS
+   ========================================================= */
+
+function setBet(amount) {
+    if (spinning) return;
+
+    betInput.value = amount;
+}
+
+
+function selectColor(color) {
+
+    if (spinning) return;
+
+    selectedColor = color;
+
+    document.querySelectorAll(".color-btn")
+        .forEach(button => {
+            button.classList.remove("selected");
+        });
+
+    const selectedButton =
+        document.querySelector(
+            `.color-btn.${color}`
+        );
+
+    if (selectedButton) {
+        selectedButton.classList.add("selected");
+    }
+
+    messageEl.textContent =
+        `${color.toUpperCase()} selected. Place your bet and spin!`;
+}
+
+
+/* =========================================================
+   ROYALTY / RESULT COLOR
+   ========================================================= */
+
+function getColor(number) {
+
+    if (number === 0) {
+        return "green";
+    }
+
+    return redNumbers.has(number)
+        ? "red"
+        : "black";
+}
+
+
+/* =========================================================
+   RANDOM INTEGER
+   ========================================================= */
+
+function randomInt(min, max) {
+
+    return Math.floor(
+        Math.random() * (max - min + 1)
+    ) + min;
+}
+
+
+/* =========================================================
+   SPIN
+   ========================================================= */
+
+function spin() {
+
+    if (spinning) {
+        return;
+    }
+
+    const bet =
+        parseFloat(betInput.value);
+
+    /* Validate color */
+
+    if (!selectedColor) {
+        messageEl.textContent =
+            "Choose RED, BLACK, or GREEN first.";
+        return;
+    }
+
+    /* Validate bet */
+
+    if (!Number.isFinite(bet) || bet <= 0) {
+        messageEl.textContent =
+            "Enter a valid bet amount.";
+        return;
+    }
+
+    /* Validate balance */
+
+    if (bet > balance) {
+        messageEl.textContent =
+            "You don't have enough virtual money for that bet.";
+        return;
+    }
+
+    /* Start spinning */
+
+    spinning = true;
+    spinButton.disabled = true;
+
+    balance -= bet;
+    updateBalance();
+
+    messageEl.textContent = "🎰 Spinning...";
+
+    /*
+        Pick the winning number BEFORE animation.
+
+        This is completely independent of
+        the previous spin and page refreshes.
+    */
+
+    const winningIndex =
+        randomInt(0, numbers.length - 1);
+
+    const winningNumber =
+        numbers[winningIndex];
+
+    /*
+        Each slice is 2PI / 37.
+    */
+
+    const slice =
+        (Math.PI * 2) / numbers.length;
+
+    const twoPi =
+        Math.PI * 2;
+
+    /*
+        IMPORTANT:
+
+        The center of each number is:
+
+        -PI/2 + (index + 0.5) * slice
+
+        The pointer is exactly at -PI/2.
+
+        Therefore the wheel needs to rotate by:
+
+        -(index + 0.5) * slice
+
+        for that number to land directly under
+        the pointer.
+    */
+
+    const targetBase =
+        -(winningIndex + 0.5) * slice;
+
+    /*
+        We want a LOT of spinning.
+
+        6–9 FULL revolutions are always added.
+    */
+
+    const extraFullSpins =
+        randomInt(6, 9);
+
+    /*
+        Current rotation can be any size.
+
+        Find a target equivalent angle that is
+        guaranteed to be AFTER:
+
+        current rotation + extra spins.
+    */
+
+    const minimumTarget =
+        rotation +
+        extraFullSpins * twoPi;
+
+    const turnsNeeded =
+        Math.ceil(
+            (minimumTarget - targetBase) / twoPi
+        );
+
+    const finalRotation =
+        targetBase +
+        Math.max(turnsNeeded, 0) * twoPi;
+
+    const startRotation = rotation;
+
+    /*
+        Long smooth animation.
+    */
+
+    const duration =
+        randomInt(4800, 5600);
+
+    const startTime =
+        performance.now();
+
+
+    function animate(currentTime) {
+
+        const elapsed =
+            currentTime - startTime;
+
+        const progress =
+            Math.min(elapsed / duration, 1);
+
+        /*
+            Strong ease-out.
+
+            Fast at first,
+            then gradually slows
+            to a stop.
+        */
+
+        const eased =
+            1 - Math.pow(1 - progress, 4.2);
+
+        rotation =
+            startRotation +
+            (finalRotation - startRotation) *
+            eased;
+
+        drawWheel();
+
+        if (progress < 1) {
+
+            requestAnimationFrame(animate);
+
+        } else {
+
+            /*
+                Force exact final position
+                to prevent tiny floating point
+                differences.
+            */
+
+            rotation = finalRotation;
+
+            drawWheel();
+
+            finishSpin(
+                winningNumber,
+                bet
+            );
+        }
+    }
+
+    requestAnimationFrame(animate);
+}
+
+
+/* =========================================================
+   FINISH SPIN
+   ========================================================= */
 
 function finishSpin(number, bet) {
-  const resultColor = getColor(number);
 
-  let winnings = 0;
+    const resultColor =
+        getColor(number);
 
-  if (resultColor === selectedColor) {
-    if (resultColor === "green") {
-      winnings = bet * 14;
+    let winnings = 0;
+
+    /*
+        Color payouts:
+
+        RED / BLACK:
+        1:1 profit
+
+        GREEN:
+        14:1 profit
+    */
+
+    if (resultColor === selectedColor) {
+
+        if (resultColor === "green") {
+
+            winnings = bet * 14;
+
+        } else {
+
+            winnings = bet * 2;
+        }
+
+        balance += winnings;
+
+        messageEl.textContent =
+            `🎉 ${number} ${resultColor.toUpperCase()} — YOU WON $${winnings.toFixed(2)}!`;
+
     } else {
-      winnings = bet * 2;
+
+        messageEl.textContent =
+            `Result: ${number} ${resultColor.toUpperCase()} — You lost $${bet.toFixed(2)}.`;
     }
 
-    balance += winnings;
+    updateBalance();
 
-    messageEl.textContent =
-      `🎉 ${number} ${resultColor.toUpperCase()} — You won $${winnings.toFixed(2)}!`;
-  } else {
-    messageEl.textContent =
-      `Result: ${number} ${resultColor.toUpperCase()} — You lost $${bet.toFixed(2)}.`;
-  }
+    addHistory(
+        number,
+        resultColor
+    );
 
-  updateBalance();
-  addHistory(number, resultColor);
-
-  spinning = false;
-  spinButton.disabled = false;
+    spinning = false;
+    spinButton.disabled = false;
 }
+
+
+/* =========================================================
+   HISTORY
+   ========================================================= */
 
 function addHistory(number, color) {
-  const span = document.createElement("span");
 
-  span.textContent = number;
-  span.style.background =
-    color === "red" ? "#dc2626" :
-    color === "green" ? "#16a34a" : "#020617";
+    const result =
+        document.createElement("div");
 
-  historyEl.prepend(span);
+    result.className = "result";
 
-  if (historyEl.children.length > 10) {
-    historyEl.lastChild.remove();
-  }
+    result.textContent = number;
+
+    if (color === "red") {
+
+        result.style.background =
+            "#d92332";
+
+    } else if (color === "green") {
+
+        result.style.background =
+            "#159447";
+
+    } else {
+
+        result.style.background =
+            "#080b10";
+    }
+
+    historyEl.prepend(result);
+
+    /*
+        Keep only the latest 12 results.
+    */
+
+    while (historyEl.children.length > 12) {
+        historyEl.lastElementChild.remove();
+    }
 }
+
+
+/* =========================================================
+   RESET
+   ========================================================= */
 
 function resetGame() {
-  balance = 1000;
-  selectedColor = null;
-  rotation = 0;
-  spinning = false;
 
-  historyEl.innerHTML = "";
-  messageEl.textContent = "Choose a color and spin!";
+    if (spinning) return;
 
-  document.querySelectorAll(".color-btn").forEach(btn => {
-    btn.classList.remove("selected");
-  });
+    balance = 0;
+    selectedColor = null;
+    rotation = 0;
 
-  updateBalance();
-  drawWheel();
+    updateBalance();
+
+    historyEl.innerHTML = "";
+
+    document.querySelectorAll(".color-btn")
+        .forEach(button => {
+            button.classList.remove("selected");
+        });
+
+    messageEl.textContent =
+        "Add virtual money, choose a color, and spin!";
+
+    drawWheel();
 }
+
+
+/* =========================================================
+   ENTER KEY SUPPORT
+   ========================================================= */
+
+addMoneyInput.addEventListener("keydown", event => {
+
+    if (event.key === "Enter") {
+        addMoney();
+    }
+});
+
+betInput.addEventListener("keydown", event => {
+
+    if (event.key === "Enter") {
+        spin();
+    }
+});
+
+
+/* =========================================================
+   INITIALIZE
+   ========================================================= */
 
 drawWheel();
 updateBalance();
+
 </script>
 
 </body>
