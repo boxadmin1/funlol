@@ -39,18 +39,85 @@ h1 {
 }
 
 .balance {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
   background: #111827;
   border: 1px solid #263247;
   border-radius: 12px;
   padding: 12px 25px;
-  margin-bottom: 25px;
+  margin-bottom: 20px;
 }
 
 .balance span {
   color: #42e6a4;
   font-size: 25px;
   font-weight: bold;
+}
+
+.starting-balance {
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto 25px;
+  background: #111827;
+  border: 1px solid #263247;
+  border-radius: 14px;
+  padding: 18px;
+}
+
+.starting-balance label {
+  display: block;
+  text-align: left;
+  color: #aab5c7;
+  font-size: 13px;
+  margin-bottom: 10px;
+}
+
+.balance-input-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.balance-input-row span {
+  font-size: 22px;
+  color: #42e6a4;
+  font-weight: bold;
+}
+
+.balance-input-row input {
+  flex: 1;
+  min-width: 0;
+}
+
+.balance-input-row button {
+  background: #42e6a4;
+  color: #06130d;
+  border: none;
+  border-radius: 8px;
+  padding: 13px 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.starting-balance-buttons {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.starting-balance-buttons button {
+  flex: 1;
+  background: #1e293b;
+  color: white;
+  border: 1px solid #334155;
+  border-radius: 7px;
+  padding: 9px 4px;
+  cursor: pointer;
+}
+
+.starting-balance-buttons button:hover {
+  background: #334155;
 }
 
 .layout {
@@ -225,13 +292,13 @@ input:focus {
 
 .history span {
   display: inline-block;
-  background: #1e293b;
   border-radius: 50%;
   width: 30px;
   height: 30px;
   line-height: 30px;
   margin: 3px;
   color: white;
+  text-align: center;
 }
 </style>
 </head>
@@ -245,6 +312,29 @@ input:focus {
 
   <div class="balance">
     Balance: <span id="balance">$1,000.00</span>
+  </div>
+
+  <div class="starting-balance">
+    <label>Starting Balance</label>
+
+    <div class="balance-input-row">
+      <span>$</span>
+      <input
+        id="startingBalanceInput"
+        type="number"
+        min="0"
+        step="0.01"
+        value="1000"
+      >
+      <button onclick="setStartingBalance()">Set Balance</button>
+    </div>
+
+    <div class="starting-balance-buttons">
+      <button onclick="setStartingAmount(100)">100</button>
+      <button onclick="setStartingAmount(1000)">1,000</button>
+      <button onclick="setStartingAmount(10000)">10,000</button>
+      <button onclick="setStartingAmount(100000)">100,000</button>
+    </div>
   </div>
 
   <div class="layout">
@@ -328,7 +418,7 @@ let selectedColor = null;
 let rotation = 0;
 let spinning = false;
 
-// Real roulette numbers
+// European roulette wheel
 const numbers = [
   0, 32, 15, 19, 4, 21, 2, 25, 17, 34,
   6, 27, 13, 36, 11, 30, 8, 23, 10, 5,
@@ -425,6 +515,28 @@ function setBet(amount) {
   betInput.value = amount;
 }
 
+function setStartingAmount(amount) {
+  document.getElementById("startingBalanceInput").value = amount;
+}
+
+function setStartingBalance() {
+  if (spinning) return;
+
+  const input = document.getElementById("startingBalanceInput");
+  const newBalance = parseFloat(input.value);
+
+  if (isNaN(newBalance) || newBalance < 0) {
+    messageEl.textContent = "Enter a valid starting balance!";
+    return;
+  }
+
+  balance = newBalance;
+  updateBalance();
+
+  messageEl.textContent =
+    `Starting balance set to $${newBalance.toFixed(2)}!`;
+}
+
 function selectColor(color) {
   selectedColor = color;
 
@@ -468,25 +580,39 @@ function spin() {
 
   messageEl.textContent = "Spinning...";
 
-  // Pick winning number
+  // NEW RANDOM RESULT EVERY SPIN
   const winningIndex =
     Math.floor(Math.random() * numbers.length);
 
   const winningNumber = numbers[winningIndex];
 
-  // Calculate exact rotation so winning number lands at pointer
   const slice = (Math.PI * 2) / numbers.length;
 
+  // The pointer is at the TOP of the wheel.
+  // This calculates the exact rotation needed
+  // to put the randomly selected number under it.
   const targetAngle =
     -(winningIndex * slice + slice / 2);
 
-  const extraSpins = 6 + Math.floor(Math.random() * 3);
+  // Always spin forward.
+  // Add a random number of full rotations.
+  const extraSpins =
+    5 + Math.floor(Math.random() * 4);
+
+  const currentRotation = rotation;
+
+  // Normalize the target so it is ahead of the current wheel position.
+  const twoPi = Math.PI * 2;
+
+  let targetRotation =
+    targetAngle + extraSpins * twoPi;
+
+  while (targetRotation <= currentRotation) {
+    targetRotation += twoPi;
+  }
 
   const startRotation = rotation;
-  const finalRotation =
-    Math.ceil(startRotation / (Math.PI * 2)) * Math.PI * 2
-    + extraSpins * Math.PI * 2
-    + targetAngle;
+  const finalRotation = targetRotation;
 
   const duration = 4500;
   const startTime = performance.now();
@@ -563,6 +689,9 @@ function addHistory(number, color) {
 function resetGame() {
   balance = 1000;
   selectedColor = null;
+  rotation = 0;
+  spinning = false;
+
   historyEl.innerHTML = "";
   messageEl.textContent = "Choose a color and spin!";
 
@@ -571,6 +700,7 @@ function resetGame() {
   });
 
   updateBalance();
+  drawWheel();
 }
 
 drawWheel();
